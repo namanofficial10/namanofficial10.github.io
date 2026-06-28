@@ -1,9 +1,620 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Naman Sharma — Analytics & Data Engineering</title>
+<meta name="description" content="Naman Sharma — Analytics & Data Engineering professional. SQL optimization, pipelines, dashboards and enterprise analytics. Scan to save my contact." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ===========================================================
+     "Petrol & Signal" — a data-infrastructure identity.
+     Cool cyan carries the DATA (lineage graph, wires);
+     warm amber carries the PERSON (actions, highlights).
+     =========================================================== */
+  :root{
+    --bg:      #0B1A20;   /* deep petrol teal (clearly teal, not black) */
+    --bg-2:    #081318;   /* darker */
+    --panel:   #102830;   /* raised panel */
+    --panel-2: #0E2129;
+    --paper:   #ECE7DA;   /* warm bone — the contact card */
+    --tile:    #FBFAF4;   /* near-white QR tile */
+    --text:    #E7EEEC;
+    --muted:   #7F9AA1;
+    --ink:     #122229;   /* dark text on bone */
+    --ink-soft:#46606A;
+    --wire:    #54CBC0;   /* cool data cyan */
+    --wire-dim:rgba(84,203,192,0.30);
+    --accent:  #F2A35E;   /* warm signal amber */
+    --line:    rgba(231,238,236,0.12);
+    --maxw:    1140px;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Inter",system-ui,sans-serif; font-size:17px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{ color:inherit; }
+  ::selection{ background:var(--accent); color:#10220f; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 16px;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:""; width:24px; height:1px; background:var(--accent); }
+
+  /* ===================== NAV ===================== */
+  .nav{ position:fixed; inset:0 0 auto 0; z-index:60;
+    background:rgba(8,19,24,0.74); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:-.02em; font-size:18px; text-decoration:none; }
+  .brand .b{ color:var(--wire); }
+  .nav-right{ display:flex; align-items:center; gap:28px; }
+  .nav-links{ display:flex; gap:26px; }
+  .nav-links a{ font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--muted); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover{ color:var(--text); }
+  .status{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:8px; }
+  .status .led{ width:8px; height:8px; border-radius:50%; background:var(--wire); box-shadow:0 0 10px var(--wire); animation:blink 2.4s infinite; }
+  @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  /* ===================== HERO ===================== */
+  .hero{ padding:150px 0 70px; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:50px; align-items:center; }
+  .hero h1{ font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:-.03em;
+    line-height:.98; font-size:clamp(3rem,8vw,5.6rem); margin:0 0 6px; }
+  .hero h1 .b{ color:var(--wire); }
+  .hero .role{ font-family:"Space Grotesk",sans-serif; font-weight:500; font-size:clamp(1.1rem,2.6vw,1.5rem);
+    margin:0 0 22px; letter-spacing:-.01em; }
+  .hero .lede{ color:var(--muted); max-width:48ch; margin:0 0 30px; }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:14px; }
+  .btn{ display:inline-flex; align-items:center; gap:10px; font-family:"JetBrains Mono",monospace;
+    font-size:13px; padding:14px 22px; border-radius:3px; text-decoration:none; cursor:pointer;
+    border:1px solid var(--line); background:transparent; color:var(--text);
+    transition:transform .18s, border-color .2s, background .2s; }
+  .btn:hover{ transform:translateY(-2px); border-color:var(--text); }
+  .btn-primary{ background:var(--accent); border-color:var(--accent); color:#16210d; font-weight:500; }
+  .btn-primary:hover{ background:#f6b277; border-color:#f6b277; }
+
+  /* ----- lineage graph (the signature) ----- */
+  .graph-panel{ background:linear-gradient(160deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line); border-radius:10px; padding:18px 16px 14px; position:relative; overflow:hidden; }
+  .graph-panel .tag{ position:absolute; top:12px; left:16px; font-family:"JetBrains Mono",monospace;
+    font-size:11px; letter-spacing:.14em; color:var(--muted); }
+  .graph-panel svg{ width:100%; height:auto; display:block; }
+  .col-label{ font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.18em; fill:var(--muted); text-transform:uppercase; }
+  .edge{ fill:none; stroke:var(--wire-dim); stroke-width:1.4; }
+  .edge.draw{ stroke-dasharray:1; stroke-dashoffset:1; animation:draw 1.1s ease forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .node rect{ fill:var(--panel); stroke:var(--wire); stroke-opacity:.55; stroke-width:1.2; }
+  .node text{ font-family:"JetBrains Mono",monospace; font-size:12px; fill:var(--text); }
+  .node.src rect{ animation:srcpulse 3.2s ease-in-out infinite; }
+  @keyframes srcpulse{ 0%,100%{ stroke-opacity:.45 } 50%{ stroke-opacity:1 } }
+  .node-anim{ opacity:0; transform-box:fill-box; transform-origin:center; animation:pop .5s ease forwards; }
+  @keyframes pop{ from{ opacity:0; transform:translateY(6px) scale(.96);} to{ opacity:1; transform:none;} }
+  .packet{ fill:var(--wire); }
+
+  /* ===================== METRICS BAND ===================== */
+  .metrics{ border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--bg-2); }
+  .metrics .wrap{ display:grid; grid-template-columns:repeat(6,1fr); gap:0; }
+  .metric{ padding:30px 22px; border-left:1px solid var(--line); }
+  .metric:first-child{ border-left:none; }
+  .metric .n{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.9rem; letter-spacing:-.02em; line-height:1; }
+  .metric.hl .n{ color:var(--accent); }
+  .metric .l{ font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); margin-top:10px; line-height:1.5; }
+
+  /* ===================== SECTION SHELL ===================== */
+  .section{ padding:90px 0; }
+  .section.bd{ border-top:1px solid var(--line); }
+  .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:46px; }
+  .section-head h2{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:clamp(1.9rem,4.6vw,3rem);
+    letter-spacing:-.03em; margin:0; line-height:1; }
+  .section-head .idx{ font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--muted); }
+
+  /* ===================== EXPERIENCE (pipeline timeline) ===================== */
+  .timeline{ position:relative; padding-left:34px; }
+  .timeline::before{ content:""; position:absolute; left:8px; top:6px; bottom:6px; width:2px;
+    background:linear-gradient(var(--wire),var(--wire-dim)); border-radius:2px; }
+  .tl-item{ position:relative; padding-bottom:46px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{ content:""; position:absolute; left:-33px; top:5px; width:14px; height:14px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--wire); box-shadow:0 0 0 4px var(--bg); }
+  .tl-top{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 14px; margin-bottom:4px; }
+  .tl-top h3{ font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:1.3rem; letter-spacing:-.01em; margin:0; }
+  .tl-top .co{ color:var(--wire); font-weight:500; }
+  .tl-meta{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--muted); margin-bottom:14px; }
+  .tl-item ul{ margin:0; padding:0; list-style:none; }
+  .tl-item li{ position:relative; padding-left:20px; color:var(--muted); margin-bottom:9px; font-size:.98rem; }
+  .tl-item li::before{ content:"→"; position:absolute; left:0; color:var(--wire); font-family:"JetBrains Mono",monospace; }
+  .tl-item li b{ color:var(--text); font-weight:600; }
+
+  /* ===================== PROJECTS ===================== */
+  .proj-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .proj{ background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:28px; transition:transform .2s, border-color .2s; }
+  .proj:hover{ transform:translateY(-4px); border-color:var(--wire-dim); }
+  .proj .pmeta{ font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.05em; color:var(--accent); text-transform:uppercase; margin-bottom:14px; }
+  .proj h3{ font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:1.35rem; letter-spacing:-.01em; margin:0 0 14px; }
+  .proj ul{ margin:0; padding:0; list-style:none; }
+  .proj li{ position:relative; padding-left:18px; color:var(--muted); font-size:.95rem; margin-bottom:9px; }
+  .proj li::before{ content:"·"; position:absolute; left:4px; color:var(--wire); font-weight:700; }
+  .proj li b{ color:var(--text); }
+
+  /* ===================== TWO-COL (skills / certs+edu) ===================== */
+  .duo{ display:grid; grid-template-columns:1.2fr 1fr; gap:56px; align-items:start; }
+  .skill-group{ margin-bottom:26px; }
+  .skill-group h4{ font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 12px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-family:"JetBrains Mono",monospace; font-size:12.5px; padding:7px 13px; border:1px solid var(--line); border-radius:3px; color:var(--text); transition:border-color .2s, color .2s; }
+  .chip:hover{ border-color:var(--wire); color:var(--wire); }
+
+  .stack{ border-top:1px solid var(--line); }
+  .stack-item{ padding:18px 0; border-bottom:1px solid var(--line); }
+  .stack-item h5{ font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:1.05rem; margin:0 0 4px; letter-spacing:-.01em; }
+  .stack-item p{ margin:0; color:var(--muted); font-size:.9rem; font-family:"JetBrains Mono",monospace; }
+  .stack-item .when{ float:right; font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--accent); }
+
+  /* ===================== CONTACT (QR signature) ===================== */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+  .contact-copy h2{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:clamp(2.2rem,5.5vw,3.6rem);
+    letter-spacing:-.03em; line-height:1; margin:0 0 20px; }
+  .contact-copy p{ color:var(--muted); max-width:42ch; margin:0 0 28px; }
+  .direct{ display:flex; flex-direction:column; }
+  .direct a{ display:flex; align-items:baseline; gap:14px; padding:14px 0; border-top:1px solid var(--line); text-decoration:none; }
+  .direct a:last-child{ border-bottom:1px solid var(--line); }
+  .direct a .k{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--muted); width:88px; flex:none; }
+  .direct a .v{ font-size:1.02rem; transition:color .2s; }
+  .direct a:hover .v{ color:var(--wire); }
+
+  .qr-stage{ display:flex; justify-content:center; }
+  .qr-card{ background:var(--paper); border-radius:10px; padding:32px; width:100%; max-width:380px; position:relative;
+    box-shadow:0 30px 60px -24px rgba(0,0,0,.6), 0 2px 0 rgba(255,255,255,.25) inset; transition:transform .25s ease; }
+  .qr-card::before{ content:""; position:absolute; left:32px; right:32px; top:0; height:4px; background:var(--accent); border-radius:0 0 3px 3px; }
+  .crop{ position:absolute; width:13px; height:13px; border-color:var(--ink-soft); opacity:.5; }
+  .crop.tl{ top:11px; left:11px; border-top:1.5px solid; border-left:1.5px solid; }
+  .crop.tr{ top:11px; right:11px; border-top:1.5px solid; border-right:1.5px solid; }
+  .crop.bl{ bottom:11px; left:11px; border-bottom:1.5px solid; border-left:1.5px solid; }
+  .crop.br{ bottom:11px; right:11px; border-bottom:1.5px solid; border-right:1.5px solid; }
+  .qr-card .cn{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.5rem; color:var(--ink); letter-spacing:-.02em; line-height:1; margin:4px 0 3px; }
+  .qr-card .cr{ font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:20px; }
+  .qr-tile{ background:var(--tile); border-radius:6px; padding:16px; display:flex; align-items:center; justify-content:center;
+    aspect-ratio:1; box-shadow:0 1px 0 rgba(0,0,0,.08) inset; border:1px solid rgba(0,0,0,.06); }
+  .qr-tile canvas, .qr-tile img{ width:100% !important; height:auto !important; display:block; image-rendering:pixelated; }
+  .qr-fallback{ font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--ink-soft); text-align:center; padding:18px; line-height:1.6; word-break:break-all; }
+  .qr-caption{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--ink-soft); text-align:center; margin:16px 0 18px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .qr-caption .dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 1.8s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+  .modes{ display:flex; gap:6px; background:rgba(18,34,41,.06); padding:4px; border-radius:6px; }
+  .mode-btn{ flex:1; font-family:"JetBrains Mono",monospace; font-size:11px; padding:9px 6px; border:none; border-radius:4px;
+    cursor:pointer; background:transparent; color:var(--ink-soft); transition:background .2s, color .2s; }
+  .mode-btn[aria-pressed="true"]{ background:var(--ink); color:var(--paper); }
+  .mode-btn:hover{ color:var(--ink); }
+  .mode-btn[aria-pressed="true"]:hover{ color:var(--paper); }
+  .card-actions{ display:flex; gap:10px; margin-top:16px; }
+  .mini{ flex:1; font-family:"JetBrains Mono",monospace; font-size:11px; padding:11px; border-radius:4px; cursor:pointer;
+    text-align:center; text-decoration:none; border:1px solid rgba(18,34,41,.18); color:var(--ink); background:transparent;
+    transition:background .2s, color .2s, border-color .2s; }
+  .mini:hover{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  /* ===================== FOOTER ===================== */
+  .footer{ border-top:1px solid var(--line); padding:40px 0 56px; }
+  .footer .wrap{ display:flex; justify-content:space-between; align-items:center; gap:18px; flex-wrap:wrap; }
+  .footer .fb{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:1.1rem; }
+  .footer small{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--muted); }
+  .footer .langs{ font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--muted); }
+  .footer .langs b{ color:var(--text); font-weight:500; }
+
+  /* ===================== MOTION / REVEAL ===================== */
+  .reveal{ opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  .hero .stagger{ opacity:0; transform:translateY(16px); animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  .hero .stagger:nth-child(1){animation-delay:.05s}
+  .hero .stagger:nth-child(2){animation-delay:.13s}
+  .hero .stagger:nth-child(3){animation-delay:.21s}
+  .hero .stagger:nth-child(4){animation-delay:.29s}
+  .hero .stagger:nth-child(5){animation-delay:.37s}
+  @keyframes rise{ to{opacity:1;transform:none} }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:1fr; gap:36px; }
+    .metrics .wrap{ grid-template-columns:repeat(2,1fr); }
+    .metric{ border-left:1px solid var(--line); border-top:1px solid var(--line); }
+    .metric:nth-child(odd){ border-left:none; }
+    .metric:nth-child(1),.metric:nth-child(2){ border-top:none; }
+    .proj-grid{ grid-template-columns:1fr; }
+    .duo, .contact-grid{ grid-template-columns:1fr; gap:38px; }
+    .nav-links{ display:none; }
+    .qr-stage{ order:-1; }
+  }
+  @media (max-width:520px){
+    .metrics .wrap{ grid-template-columns:1fr; }
+    .metric{ border-left:none !important; }
+    .metric:not(:first-child){ border-top:1px solid var(--line); }
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+    .hero .stagger{ opacity:1; transform:none; }
+    .edge.draw{ stroke-dashoffset:0; }
+    .node-anim{ opacity:1; }
+  }
+</style>
+</head>
 <body>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+  <nav class="nav">
+    <div class="wrap">
+      <a href="#home" class="brand">Naman<span class="b">.</span>Sharma</a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <span class="status"><span class="led"></span>Founder · InnoSN Soft Tech</span>
+      </div>
+    </div>
+  </nav>
 
+  <!-- ===================== HERO ===================== -->
+  <header class="hero" id="home">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow stagger">Analytics &amp; Data Engineering · Gurgaon, IN</p>
+          <h1 class="stagger">Naman<br>Sharma<span class="b">.</span></h1>
+          <p class="role stagger">I turn enterprise data into decisions — pipelines, lineage &amp; dashboards.</p>
+          <p class="lede stagger">Founder of InnoSN Soft Tech and former Business Technology Solutions Associate at ZS Associates, where I drove SQL optimization, backend data engineering and analytics consulting on Redshift, PostgreSQL, Databricks, Python and Tableau for Fortune 500 clients.</p>
+          <div class="cta-row stagger">
+            <a href="#projects" class="btn btn-primary">View projects →</a>
+            <a href="#contact" class="btn">Save my contact ⌁</a>
+          </div>
+        </div>
+
+        <div class="graph-panel reveal" aria-hidden="true">
+          <svg viewBox="0 0 580 330" id="lineage" role="img" aria-label="Data pipeline lineage graph">
+            <!-- column labels -->
+            <text class="col-label" x="95"  y="22" text-anchor="middle">Sources</text>
+            <text class="col-label" x="290" y="22" text-anchor="middle">Transform</text>
+            <text class="col-label" x="485" y="22" text-anchor="middle">Deliver</text>
+
+            <!-- edges -->
+            <g id="edges">
+              <path class="edge draw" pathLength="1" style="animation-delay:.15s" d="M155,82 C189,82 196,112 230,112"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.25s" d="M155,170 C189,170 196,112 230,112"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.35s" d="M155,170 C189,170 196,235 230,235"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.45s" d="M155,258 C189,258 196,235 230,235"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.55s" d="M350,112 C384,112 391,142 425,142"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.65s" d="M350,235 C384,235 391,142 425,142"/>
+              <path class="edge draw" pathLength="1" style="animation-delay:.75s" d="M350,235 C384,235 391,240 425,240"/>
+              <path class="edge draw" id="flowpath" pathLength="1" style="animation-delay:.7s" d="M350,112 C384,112 391,240 425,240"/>
+            </g>
+
+            <!-- nodes -->
+            <g class="node src node-anim" style="animation-delay:.2s"><rect x="35"  y="64"  width="120" height="36" rx="8"/><text x="95"  y="86"  text-anchor="middle">Redshift</text></g>
+            <g class="node src node-anim" style="animation-delay:.3s"><rect x="35"  y="152" width="120" height="36" rx="8"/><text x="95"  y="174" text-anchor="middle">PostgreSQL</text></g>
+            <g class="node src node-anim" style="animation-delay:.4s"><rect x="35"  y="240" width="120" height="36" rx="8"/><text x="95"  y="262" text-anchor="middle">AWS S3</text></g>
+            <g class="node node-anim"     style="animation-delay:.55s"><rect x="230" y="94"  width="120" height="36" rx="8"/><text x="290" y="116" text-anchor="middle">Python</text></g>
+            <g class="node node-anim"     style="animation-delay:.65s"><rect x="230" y="217" width="120" height="36" rx="8"/><text x="290" y="239" text-anchor="middle">Databricks</text></g>
+            <g class="node node-anim"     style="animation-delay:.8s"><rect x="425" y="124" width="120" height="36" rx="8"/><text x="485" y="146" text-anchor="middle">Tableau</text></g>
+            <g class="node node-anim"     style="animation-delay:.9s"><rect x="425" y="222" width="120" height="36" rx="8"/><text x="485" y="244" text-anchor="middle">Power BI</text></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== METRICS ===================== -->
+  <section class="metrics">
+    <div class="wrap">
+      <div class="metric"><div class="n">~35%</div><div class="l">faster report<br>generation</div></div>
+      <div class="metric"><div class="n">~60%</div><div class="l">less manual<br>maintenance</div></div>
+      <div class="metric"><div class="n">~40%</div><div class="l">better debugging<br>&amp; impact analysis</div></div>
+      <div class="metric"><div class="n">500+</div><div class="l">dashboard users<br>supported</div></div>
+      <div class="metric hl"><div class="n">13</div><div class="l">patents filed<br>(4 granted)</div></div>
+      <div class="metric"><div class="n" id="papersN">XX</div><div class="l">research papers<br>published</div></div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section class="section bd" id="experience">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Experience</h2>
+        <span class="idx">// where the data flows</span>
+      </div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-top"><h3>Founder</h3><span class="co">InnoSN Soft Tech</span></div>
+          <div class="tl-meta">2026 – Present · Gurgaon, Haryana</div>
+          <ul>
+            <li>Founded a software &amp; data venture building analytics, data engineering and AI solutions for clients.</li>
+            <li>Leading product direction, client delivery and engineering end to end.</li>
+          </ul>
+        </div>
+        <div class="tl-item">
+          <div class="tl-top"><h3>Business Technology Solutions Associate</h3><span class="co">ZS Associates</span></div>
+          <div class="tl-meta">Aug 2024 – 2026 · Gurgaon, Haryana · Fortune 500 client</div>
+          <ul>
+            <li>Delivered analytics and backend data engineering across <b>5–6 enterprise consulting projects</b>.</li>
+            <li>Optimized SQL workflows on Amazon Redshift &amp; PostgreSQL, cutting report generation time <b>~35%</b>.</li>
+            <li>Built and maintained Tableau dashboards for incentive-compensation tracking used by <b>500+ field users</b> and leadership.</li>
+            <li>Automated Redshift cleanup &amp; archival with Python + AWS S3, reducing manual effort <b>~60%</b>.</li>
+            <li>Developed a SQL lineage utility, improving debugging and impact-analysis accuracy <b>~40%</b>.</li>
+            <li>Owned backend validation, reconciliation and reporting for business-critical workflows.</li>
+          </ul>
+        </div>
+        <div class="tl-item">
+          <div class="tl-top"><h3>Data Analytics Intern</h3><span class="co">Interns Elite Edutech</span></div>
+          <div class="tl-meta">Jan 2024 – May 2024 · Gurgaon, Haryana</div>
+          <ul>
+            <li>Built analytics dashboards delivering performance insights for <b>1,000+ learners</b> and academic leadership.</li>
+            <li>Improved reporting accessibility and visualization, reducing manual interpretation <b>~30%</b>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section class="section bd" id="projects">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Projects</h2>
+        <span class="idx">02 selected builds</span>
+      </div>
+      <div class="proj-grid">
+        <div class="proj reveal">
+          <div class="pmeta">Python · Static analysis · Oct 2025 – Jan 2026</div>
+          <h3>Enterprise SQL Lineage &amp; Dependency Analyzer</h3>
+          <ul>
+            <li>Python tool tracing dependencies across <b>200+ database objects</b> and reporting workflows.</li>
+            <li>Reduced debugging and impact-analysis effort <b>~40%</b> for backend analytics teams.</li>
+            <li>Improved deployment reliability and accelerated root-cause analysis for enterprise reporting.</li>
+          </ul>
+        </div>
+        <div class="proj reveal">
+          <div class="pmeta">Python · AWS S3 · Jun 2025 – Aug 2025</div>
+          <h3>Automated Redshift Cleanup &amp; Backup Utility</h3>
+          <ul>
+            <li>Automated backup and cleanup for Redshift tables using Python and AWS S3.</li>
+            <li>Cut manual maintenance <b>~60%</b> and improved storage optimization at scale.</li>
+            <li>Enabled secure archival with rollback support, validation checks and automated logging.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS / CERTS / EDU ===================== -->
+  <section class="section bd" id="skills">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Stack &amp; credentials</h2>
+        <span class="idx">// the toolbox</span>
+      </div>
+      <div class="duo">
+        <div class="reveal">
+          <div class="skill-group">
+            <h4>Databases &amp; warehouse</h4>
+            <div class="chips"><span class="chip">PostgreSQL</span><span class="chip">Amazon Redshift</span><span class="chip">Snowflake</span><span class="chip">MongoDB</span></div>
+          </div>
+          <div class="skill-group">
+            <h4>Cloud &amp; data engineering</h4>
+            <div class="chips"><span class="chip">AWS</span><span class="chip">AWS S3</span><span class="chip">Databricks</span><span class="chip">ETL</span><span class="chip">Matillion</span></div>
+          </div>
+          <div class="skill-group">
+            <h4>Languages &amp; tools</h4>
+            <div class="chips"><span class="chip">SQL</span><span class="chip">Python</span><span class="chip">Excel</span></div>
+          </div>
+          <div class="skill-group">
+            <h4>BI &amp; visualization</h4>
+            <div class="chips"><span class="chip">Tableau</span><span class="chip">Tableau Prep</span><span class="chip">Tableau API</span><span class="chip">Tableau Pulse</span><span class="chip">Power BI</span></div>
+          </div>
+          <div class="skill-group">
+            <h4>AI / ML</h4>
+            <div class="chips"><span class="chip">GenAI</span><span class="chip">Machine Learning</span><span class="chip">AI</span></div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="skill-group">
+            <h4>Certifications</h4>
+            <div class="stack">
+              <div class="stack-item"><h5>Databricks Certified Data Engineer Associate</h5><p>Data engineering on Databricks</p></div>
+              <div class="stack-item"><h5>Databricks Generative AI Fundamentals</h5><p>Foundational GenAI</p></div>
+              <div class="stack-item"><h5>Matillion Certified Professional</h5><p>Data integration</p></div>
+            </div>
+          </div>
+          <div class="skill-group" style="margin-top:30px;">
+            <h4>Education</h4>
+            <div class="stack">
+              <div class="stack-item"><span class="when">2024 – Present</span><h5>MBA, Information Technology</h5><p>Amity University Online</p></div>
+              <div class="stack-item"><span class="when">2020 – 2024</span><h5>B.Tech, Information Technology</h5><p>Chandigarh Group of Colleges, Landran</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT (QR signature) ===================== -->
+  <section class="section bd" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-copy reveal">
+          <p class="eyebrow">Contact</p>
+          <h2>Point your camera here.</h2>
+          <p>Scan the card to save me straight to your phone — name, role, email and number, no typing. Or reach out directly below.</p>
+          <div class="direct">
+            <a href="mailto:namansharma.official.1@gmail.com"><span class="k">Email</span><span class="v">namansharma.official.1@gmail.com</span></a>
+            <a href="tel:+918195046404"><span class="k">Phone</span><span class="v">+91 81950 46404</span></a>
+            <a href="https://linkedin.com/in/namans10" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">in/namans10</span></a>
+            <a href="#" onclick="return false;" style="cursor:default;"><span class="k">Location</span><span class="v">Gurgaon, Haryana, India</span></a>
+          </div>
+        </div>
+
+        <div class="qr-stage reveal">
+          <div class="qr-card" id="qrCard">
+            <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+            <div class="cn">Naman Sharma</div>
+            <div class="cr">Analytics &amp; Data Engineering</div>
+            <div class="qr-tile">
+              <canvas id="qrCanvas"></canvas>
+              <div class="qr-fallback" id="qrFallback" style="display:none;"></div>
+            </div>
+            <div class="qr-caption"><span class="dot"></span><span id="qrCaption">Scan to save my contact</span></div>
+            <div class="modes" role="group" aria-label="QR content">
+              <button class="mode-btn" data-mode="contact"  aria-pressed="true">Contact</button>
+              <button class="mode-btn" data-mode="email"    aria-pressed="false">Email</button>
+              <button class="mode-btn" data-mode="linkedin" aria-pressed="false">LinkedIn</button>
+            </div>
+            <div class="card-actions">
+              <a href="#" class="mini" id="downloadVcf">Download .vcf</a>
+              <button class="mini" id="copyEmail">Copy email</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span class="fb">Naman Sharma</span>
+      <span class="langs">Languages: <b>English</b> (Conversational) · <b>Hindi</b> (Native)</span>
+      <small>© <span id="yr"></span> · Gurgaon, IN</small>
+    </div>
+  </footer>
+
+<script>
+/* ============================================================
+   ⬇  YOUR DETAILS  ⬇  — change here and the QR + card update.
+   ============================================================ */
+const ME = {
+  firstName: "Naman",
+  lastName:  "Sharma",
+  role:      "Analytics & Data Engineering Professional",
+  org:       "InnoSN Soft Tech",
+  email:     "namansharma.official.1@gmail.com",
+  phone:     "+918195046404",
+  linkedin:  "https://linkedin.com/in/namans10",
+  city:      "Gurgaon",
+  region:    "Haryana",
+  country:   "India"
+};
+/* ============================================================ */
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+function buildVCard(){
+  return [
+    "BEGIN:VCARD","VERSION:3.0",
+    `N:${ME.lastName};${ME.firstName};;;`,
+    `FN:${ME.firstName} ${ME.lastName}`,
+    `TITLE:${ME.role}`,
+    `ORG:${ME.org}`,
+    `TEL;TYPE=CELL:${ME.phone}`,
+    `EMAIL;TYPE=INTERNET:${ME.email}`,
+    `URL:${ME.linkedin}`,
+    `ADR;TYPE=WORK:;;;${ME.city};${ME.region};;${ME.country}`,
+    "END:VCARD"
+  ].join("\n");
+}
+
+const CAPTIONS = { contact:"Scan to save my contact", email:"Scan to email me", linkedin:"Scan to open LinkedIn" };
+const canvas   = document.getElementById('qrCanvas');
+const fallback = document.getElementById('qrFallback');
+const caption  = document.getElementById('qrCaption');
+let qr = null;
+
+function payloadFor(mode){
+  if(mode==='email')    return "mailto:" + ME.email;
+  if(mode==='linkedin') return ME.linkedin;
+  return buildVCard();
+}
+function renderQR(mode){
+  caption.textContent = CAPTIONS[mode];
+  const value = payloadFor(mode);
+  if(typeof QRious === "undefined"){
+    canvas.style.display="none"; fallback.style.display="block";
+    fallback.textContent = "QR library couldn't load here. Encoded value:\n\n" + value;
+    return;
+  }
+  canvas.style.display="block"; fallback.style.display="none";
+  if(!qr){ qr = new QRious({ element:canvas, size:600, level:'M', padding:24, background:'#FBFAF4', foreground:'#122229' }); }
+  qr.value = value;
+}
+document.querySelectorAll('.mode-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-btn').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    renderQR(btn.dataset.mode);
+  });
+});
+document.getElementById('downloadVcf').addEventListener('click',e=>{
+  e.preventDefault();
+  const blob=new Blob([buildVCard()],{type:'text/vcard'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download=`${ME.firstName}-${ME.lastName}.vcf`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+const copyBtn=document.getElementById('copyEmail');
+copyBtn.addEventListener('click',async()=>{
+  try{ await navigator.clipboard.writeText(ME.email); const o=copyBtn.textContent; copyBtn.textContent="Copied ✓"; setTimeout(()=>copyBtn.textContent=o,1600);}
+  catch(err){ copyBtn.textContent=ME.email; }
+});
+(function loadQR(){
+  const s=document.createElement('script');
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js";
+  s.onload=()=>renderQR('contact'); s.onerror=()=>renderQR('contact');
+  document.head.appendChild(s);
+})();
+
+/* reduced-motion check */
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* card tilt */
+const card=document.getElementById('qrCard');
+if(!reduce && card && window.matchMedia('(pointer:fine)').matches){
+  card.addEventListener('pointermove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-0.5, y=(e.clientY-r.top)/r.height-0.5;
+    card.style.transform=`perspective(900px) rotateX(${-y*4}deg) rotateY(${x*4}deg)`;
+  });
+  card.addEventListener('pointerleave',()=>card.style.transform='');
+}
+
+/* lineage "data packets" travelling the graph (motion only) */
+if(!reduce){
+  const svg=document.getElementById('lineage');
+  const SVGNS="http://www.w3.org/2000/svg";
+  const paths=["flowpath"]; // animate along the long cross path
+  // also animate a couple of edges by index
+  const edgeEls=document.querySelectorAll('#edges .edge');
+  const chosen=[edgeEls[0], edgeEls[4], document.getElementById('flowpath')].filter(Boolean);
+  chosen.forEach((p,i)=>{
+    const d=p.getAttribute('d');
+    const c=document.createElementNS(SVGNS,'circle');
+    c.setAttribute('r','3'); c.setAttribute('class','packet'); c.setAttribute('opacity','0.9');
+    const m=document.createElementNS(SVGNS,'animateMotion');
+    m.setAttribute('dur',(2.6+i*0.6)+'s'); m.setAttribute('repeatCount','indefinite');
+    m.setAttribute('begin',(1+i*0.5)+'s'); m.setAttribute('path',d);
+    c.appendChild(m); svg.appendChild(c);
+  });
+}
+
+/* scroll reveal */
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
