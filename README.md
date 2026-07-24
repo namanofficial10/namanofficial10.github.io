@@ -42,5 +42,6 @@ This portfolio contains only public, independently created, synthetic, or approp
 ## Contact
 
 - Portfolio: https://namanofficial10.github.io/
+- LinkedIn: https://linkedin.com/in/namans10
 - GitHub: https://github.com/namanofficial10
 - Email: namansharma.official.1@gmail.com
